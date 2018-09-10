@@ -15,11 +15,15 @@ SRC_UTILS_DIR  = $($(SRC_BOOTLOADER_DIR)/utils)
 SRC_PROTECTED_MODE_DIR = $($(SRC_BOOTLOADER_DIR)/protected_mode)
 
 # Source files for boot loader utilities
+SRC_UTILS += print.asm
 SRC_UTILS += print_hex.asm 
 SRC_UTILS += read_disk.asm 
 
 # Source files for protected mode 
 SRC_PROTECTED_MODE += global_descriptor_table.asm
+SRC_PROTECTED_MODE += pm_print.asm
+SRC_PROTECTED_MODE += pm_switch.asm
+
 
 
 # All source files
@@ -30,8 +34,6 @@ SRC +=  $(addprefix $(SRC_PROTECTED_MODE_DIR)/  ,$( $(SRC_PROTECTED_MODE)))
 # Paths for make to search
 VPATH = $(SRC_BOOTLOADER_DIR) $(SRC_UTILS_DIR)  
 
-# Export all variables to submakes for now, to be changed later
-export 
 
 
 # Build all sources

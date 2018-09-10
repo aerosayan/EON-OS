@@ -6,22 +6,18 @@
 
 [org 0x7c00]          ; Organise the global starting point to 0x7c00
                       ; NOTE: it is important to do pointer arithmentic
+
 mov bp, 0x9000        ; Set up the stack
 mov sp, bp
 
-mov al, 1             ; Disk sectors to read count
-mov cl, 2             ; Sector to start reading from
-call read_disk        ; Read from disk with the provided information
+mov si, MSG_RMODE
+call print            ; Print info in real mode
 
-mov dx, [0x7c00+512]  ; Test if read form disk works
-call print_hex
-call new_line
+call switch_to_pm     ; Swtich to protected mode
+                      ; NOTE : EXECUTION IS NEVER RETURNED FROM HERE
 
-call gdt_start        ; start up Global Descriptor Table
-                      ; TODO : Switch to 32 bit protected mode
-
-jmp $                 ; Infinite loop to halt execution
-
+jmp $                 ; Infinite loop to hang execution 
+                      ; NOTE : WILL NEVER BE EXECUTED
 ;------------------------------------------------------------------------------
 ;  INCLUDES
 ;------------------------------------------------------------------------------
@@ -29,19 +25,29 @@ jmp $                 ; Infinite loop to halt execution
 %include "utils/print_hex.asm"
 %include "utils/read_disk.asm"
 %include "protected_mode/global_descriptor_table.asm"
+%include "protected_mode/pm_print.asm"
+%include "protected_mode/pm_switch.asm"
 
 ;------------------------------------------------------------------------------
 
+[bits 32]            ; Start 32-bit protected mode
+; BEGIN_PM
+BEGIN_PM:            ; Execution is transferred here from switch_to_pm
+	mov ebx, MSG_PMODE
+	call pm_print    ; Print info in protected mode
+	jmp $            ; Infinite loop hang execution
+
+;------------------------------------------------------------------------------
+; GLOBAL VARIABLES
+;------------------------------------------------------------------------------
+MSG_RMODE : db "INF - Started in 16-bit real mode...",0
+MSG_PMODE : db "INF - Switched to 32-bit protected mode...",0
 
 ;------------------------------------------------------------------------------
 ; Padding and magic number for boot sector
 times 510-($-$$) db 0
 dw 0xaa55
 ;------------------------------------------------------------------------------
-
-;------------------------------------------------------------------------------
-; Extra padding to allow accessing second sector
-dw 0xdada
 
 
 
