@@ -31,10 +31,31 @@ print_hex:
 	;           :
 	;           : It is to be noted that H in 30H denotes it as a hex number
 	;--------------------------------------------------------------------------
+	;--------------------------------------------------------------------------
+	; LITTLE ENDIAN TO BIG ENDIAN CONVERTER
+	; NOTE : This is necessary for printing the number in a big endian format
+	;      : x86_64 processors do store the data in little endian but, 
+	;      : as humans it is more easier to understand big endian format
+	; TODO : Allow switching to and from big endian and little endian
+	;--------------------------------------------------------------------------
+	rol dx, 8                      ; Rotate left by eight bits i.e 1 byte
+	                               ; i.e 1 character
+	;--------------------------------------------------------------------------
 
+
+	;--------------------------------------------------------------------------
+	; PRINT OPERATION
+	;--------------------------------------------------------------------------
+	mov ah, 0x0e                    ; Print "0x" first to indicate a hex number
+	mov al, '0'
+	int 0x10
+	mov al, 'x'
+	int 0x10
+
+	; HEX_PRINT_LOOP : Loop to print all the characters of the hex number
 	hex_print_loop:                 ; Print each character in the hex number
 		cmp cx,4                    ; Loop 4 times to handle 4 digits of hex
-		je end                      ; Jump to end when 4 iterations are done
+		je end_print_hex            ; Jump to end when 4 iterations are done
 
 		;----------------------------------------------------------------------
 		; Convert the current hex digit to ascii
@@ -49,6 +70,7 @@ print_hex:
 		add al, 0x07                   ; Else convert hex N to ascii "N"
 		                            ; for N in range [A...F]
 
+	; PRINT_HEX_CHAR : Print each hex character and set the next character up
 	print_hex_char:
 		;----------------------------------------------------------------------
 		; Print the current hex character which has been converted to ASCII
@@ -56,17 +78,11 @@ print_hex:
 		mov ah, 0x0e               ; Activate printing to screen
 		int 0x10                   ; Print data in al register
 		add cx, 1                  ; Increment counter
-		rol dx, 4                  ; Rotate left by 4 : TODO : Understand HOW?
+		rol dx, 4                  ; Rotate left by 4 bits i.e one character
 		jmp hex_print_loop         ; Jump back to print next character
 
 
-	end:                           ; End of the function
-		mov ah, 0x0e               ; Activate printing to screen
-		mov al, 'x'
-		int 0x10
-		mov al, 'L'
-		int 0x10
-
+	end_print_hex:                 ; End of the function
 		popa                       ; Pop everything saved from the stack
 		ret                        ; Return to the caller
 

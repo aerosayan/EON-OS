@@ -12,6 +12,31 @@ mov sp, bp
 
 mov si, MSG_RMODE
 call print            ; Print info in real mode
+call new_line
+;------------------------------------------------------------------------------
+; TMEPORARY TEST
+;------------------------------------------------------------------------------
+; read_disk test for loading kernel in future
+mov bx, 0x00
+mov es, bx
+mov bx, 0x7c00+512  ; es:bx = 0x0000 : 0x7c00 + 512 = 0x7c00 + 512
+mov al,1      ; read one sector
+mov cl,2      ; read the second sector
+mov ch,0x00   ; cyllinder = 0
+mov dh,0      ; head = 0
+;mov dl,0x80   ; drive = set automatically by BIOS
+
+call read_disk
+; First sector will be read in correctly
+mov dx, [0x7c00+512]
+call print_hex
+call new_line
+
+; Since AL was set to 1, the second sector will not be read in correctly
+mov dx, [0x7c00+1024]
+call print_hex
+call new_line
+;------------------------------------------------------------------------------
 
 call switch_to_pm     ; Swtich to protected mode
                       ; NOTE : EXECUTION IS NEVER RETURNED FROM HERE
@@ -48,6 +73,5 @@ MSG_PMODE : db "INF - Switched to 32-bit protected mode...",0
 times 510-($-$$) db 0
 dw 0xaa55
 ;------------------------------------------------------------------------------
-
-
-
+times 256 dw 0xdada ; sector 2 = 512 bytes
+times 256 dw 0xface ; sector 3 = 512 bytes
