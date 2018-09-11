@@ -15,6 +15,7 @@
 
 ; READ_DISK : Read data from disk
 read_disk:
+	;--------------------------------------------------------------------------
 	push ax                               ; Save the AL register's value
 	mov ah, 0x02                          ; Enable reading from disk
 	;--------------------------------------------------------------------------
@@ -61,8 +62,32 @@ read_disk:
 
 ; READ_DISK_ERROR : Handle error during disk read
 read_disk_error:
+	;--------------------------------------------------------------------------
 	mov dx, 0xE002                       ; ERROR_CODE : read disk error
 	call print_hex
 	call new_line
 	jmp $                                ; Infinite loop
+
+;------------------------------------------------------------------------------
+; Simple read_disk test to read second sector from the disk
+;------------------------------------------------------------------------------
+; TEST_READ_DISK
+;test_read_disk:
+;------------------------------------------------------------------------------
+	;mov bx, 0x00
+	;mov es, bx
+	;mov bx, 0x7c00+512  ; es:bx = 0x0000 : 0x7c00 + 512 = 0x7c00 + 512
+	;mov al,1      ; read one sector
+	;mov cl,2      ; start reading from the second sector
+	;mov ch,0x00   ; cyllinder = 0
+	;mov dh,0      ; head = 0
+	;;mov dl,0x80   ; drive = set automatically by BIOS
+
+	;call read_disk
+	; First sector will be read in correctly
+	;mov dx, [0x7c00+512]
+	;call print_hex
+	;call new_line
+;------------------------------------------------------------------------------
+
 
