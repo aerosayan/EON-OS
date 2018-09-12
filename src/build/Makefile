@@ -1,5 +1,5 @@
-all: boot_sector.bin kernel.bin
-	cat boot_sector.bin kernel.bin > os_image.bin
+all: bootloader.bin kernel.bin
+	cat bootloader.bin kernel.bin > os_image.bin
 
 run: os_image.bin
 	@echo "-------------------------------"
@@ -9,7 +9,7 @@ run: os_image.bin
 clean:
 	@echo "-------------------------------"
 	@echo "CLEANING BOOTLOADER..."
-	rm boot_sector.bin kernel.bin os_image.bin
+	rm bootloader.bin kernel.bin os_image.bin
 	@echo "-------------------------------"
 xxd:
 	@echo "-------------------------------"

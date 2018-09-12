@@ -1,5 +1,5 @@
 ;==============================================================================
-;                            EON-OS : BOOT_SECTOR
+;                            EON-OS : BOOTLOADER
 ;==============================================================================
 ;                            EXECUTION STARTS HERE 
 ;------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ load_kernel:
 	mov bx, 0x00
 	mov es, bx
 	mov bx, 0x7c00 + KERNEL_OFFSET
-	mov al, 1                          ; Read 15 sectors
+	mov al, 1                          ; Number of sectors to read
 	mov cl, 2                          ; Start reading from second sector
 	mov ch, 0x0                        ; Cyllinder = 0
 	mov dh, 0x0                        ; Head = 0

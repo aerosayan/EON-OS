@@ -8,10 +8,7 @@ CC_FLAGS += -fno-stack-protector -fno-exceptions -fno-leading-underscore
 
 
 # Source files for bootloader
-SRC_BOOTLOADER = $(SRC_BOOT_SECTOR)  $(SRC_PROTECTED_MODE) $(SRC_KERNEL)
-
-# Source files for boot sector
-SRC_BOOT_SECTOR += boot_sector.asm
+SRC_BOOTLOADER = bootloader.asm $(SRC_PROTECTED_MODE) $(SRC_KERNEL)
 
 # Source files for kernel
 SRC_KERNEL += kernel.c
