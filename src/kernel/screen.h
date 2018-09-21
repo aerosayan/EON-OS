@@ -18,7 +18,7 @@
 // SCREEN COLOR ATTRIBUTES
 //-------------------------
 #define COL_WHITE_ON_BLACK 0x0f    // White text on black screen 
-#define COL_BW             0x0f    // Shortcut for white on black screen
+#define COL_WB             0x0f    // Shortcut for white on black screen
 
 
 //-----------------------------------------------------------------------------
@@ -26,4 +26,17 @@
 // Clears the screen 
 //-----------------------------------------------------------------------------
 void clear_screen();
+
+//-----------------------------------------------------------------------------
+// print_banner :
+// Print the OS banner and info onto the screen
+//-----------------------------------------------------------------------------
+void print_banner();
+
+//-----------------------------------------------------------------------------
+// print :
+// Print text onto screen
+// @param str, the text/string to be printed
+//-----------------------------------------------------------------------------
+void print(char * str);
 

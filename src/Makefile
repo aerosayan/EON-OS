@@ -3,7 +3,7 @@ ASMC = nasm                           # Assembly compiler
 ASMC_FLAGS = -fbin                    # Assembly compilation flags
 CC = gcc                              # C compiler
 CC_FLAGS  = -c -m32                   # C compiler flags
-CC_FLAGS += -ffreestanding -static -fno-builtin -nostdlib -nostdinc 
+CC_FLAGS += -std=c99 -ffreestanding -static -fno-builtin -nostdlib -nostdinc 
 CC_FLAGS += -fno-stack-protector -fno-exceptions -fno-leading-underscore
 
 

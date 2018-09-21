@@ -5,8 +5,8 @@ void kmain()
 {
 	// clear the screen using memory mapped I/O
 	clear_screen();
-	// set cursor to 1st row and 1st column using I/O port
-	// example : fb_move_cursor(0); 
+	// print the banner
+	print_banner();
 }
 
 #include "screen.c"

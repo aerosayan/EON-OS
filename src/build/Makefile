@@ -1,10 +1,12 @@
 all: bootloader.bin kernel.bin
 	cat bootloader.bin kernel.bin > os_image.bin
+	head --bytes=5000 /dev/zero >> os_image.bin
+	#dd if=/dev/zero of=os_image.bin seek=1457663 count=1 bs=1
 
 run: os_image.bin
 	@echo "-------------------------------"
 	@echo "RUNNING BOOTLOADER..."
-	qemu-system-i386.exe -d guest_errors os_image.bin
+	qemu-system-i386 -d guest_errors os_image.bin
 	@echo "-------------------------------"
 clean:
 	@echo "-------------------------------"

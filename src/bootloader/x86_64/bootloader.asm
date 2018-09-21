@@ -4,13 +4,15 @@
 ;                            EXECUTION STARTS HERE 
 ;------------------------------------------------------------------------------
 
+[bits 16]
 [org 0x7c00]          ; Organise the global starting point to 0x7c00
                       ; NOTE: it is important to do pointer arithmentic
 
-KERNEL_OFFSET equ 0x1000         ; Memory position set by ld where kernel is 
-
 mov [BOOT_DRIVE], dl  ; The BIOS stores the drive info in DL register
                       ; This will be used to read from disk and load our kernel
+
+KERNEL_OFFSET equ 0x1000         ; Memory position set by ld where kernel is 
+
 
 mov bp, 0x9000        ; Set up the stack
 mov sp, bp
@@ -23,6 +25,18 @@ call load_kernel      ; Load kernel from disk
 
 call switch_to_pm     ; Swtich to protected mode
                       ; NOTE : EXECUTION IS NEVER RETURNED FROM HERE
+
+;mov dx, [0x7c00+512]
+;call print_hex
+;call new_line
+
+;mov dx, [0x7c00+1024]
+;call print_hex
+;call new_line
+
+;mov dx, [0x7c00+2048]
+;call print_hex
+;call new_line
 
 jmp $                 ; Infinite loop to hang execution 
                       ; NOTE : WILL NEVER BE EXECUTED
@@ -41,7 +55,8 @@ jmp $                 ; Infinite loop to hang execution
 
 ; LOAD_KERNEL
 load_kernel:
-	;--------------------------------------------------------------------------
+	;----------------- ---------------------------------------------------------
+	pusha
 	mov si,MSG_KLOAD
 	call print
 	call new_line
@@ -52,13 +67,13 @@ load_kernel:
 	mov bx, 0x00
 	mov es, bx
 	mov bx, 0x7c00 + KERNEL_OFFSET
-	mov al, 1                          ; Number of sectors to read
-	mov cl, 2                          ; Start reading from second sector
-	mov ch, 0x0                        ; Cyllinder = 0
-	mov dh, 0x0                        ; Head = 0
+	mov dh, 1                            ; Number of sectors to read
+	mov dl, [BOOT_DRIVE]
+	
 	;--------------------------------------------------------------------------
 
 	call read_disk
+	popa
 	ret
 	;--------------------------------------------------------------------------
 
